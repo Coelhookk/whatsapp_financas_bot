@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 import os
 import asyncio
 
-TOKEN = os.getenv("8209483660:AAFYEkfcpXNhw2_UBTNL-8UxUhcgqXnBcr0")  # Defina essa variável no Render Dashboard
+TOKEN = os.getenv("BOT_TOKEN")  # Defina essa variável no Render Dashboard
 app = Flask(__name__)
 
 # Cria a aplicação do Telegram
