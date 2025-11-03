@@ -4,7 +4,7 @@ from core.handlers import handle_message
 import asyncio
 import os
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")  # o Render vai armazenar isso
+TOKEN = os.getenv("8209483660:AAFYEkfcpXNhw2_UBTNL-8UxUhcgqXnBcr0")  # o Render vai armazenar isso
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Olá! Sou seu bot de finanças 💰")
