@@ -4,10 +4,11 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 import os
 import asyncio
 
-TOKEN = os.getenv("BOT_TOKEN")  # Defina essa variável no Render Dashboard
+# --- Configuração ---
+TOKEN = os.getenv("BOT_TOKEN")  # Definido no Render Dashboard
 app = Flask(__name__)
 
-# Cria a aplicação do Telegram
+# --- Cria a aplicação do Telegram ---
 application = Application.builder().token(TOKEN).build()
 
 # --- Comandos do bot ---
@@ -17,6 +18,7 @@ async def start(update: Update, context):
 async def echo(update: Update, context):
     await update.message.reply_text(f"Você disse: {update.message.text}")
 
+# Adiciona os handlers
 application.add_handler(CommandHandler("start", start))
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
@@ -24,6 +26,8 @@ application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 @app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
     update = Update.de_json(request.get_json(force=True), application.bot)
+    # Inicializa o bot antes de processar updates
+    asyncio.run(application.initialize())
     asyncio.run(application.process_update(update))
     return "ok", 200
 
@@ -32,5 +36,6 @@ def webhook():
 def home():
     return "Bot do Telegram rodando via Render!", 200
 
+# --- Execução ---
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
