@@ -1,29 +1,36 @@
 from flask import Flask, request
-from core.database import init_db
-from core.handlers import handle_message
-from telegram_bot import iniciar_bot
-import threading
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
+import os
+import asyncio
 
+TOKEN = os.getenv("8209483660:AAFYEkfcpXNhw2_UBTNL-8UxUhcgqXnBcr0")  # Defina essa variável no Render Dashboard
 app = Flask(__name__)
 
-@app.before_request
-def setup():
-    init_db()
+# Cria a aplicação do Telegram
+application = Application.builder().token(TOKEN).build()
 
+# --- Comandos do bot ---
+async def start(update: Update, context):
+    await update.message.reply_text("Olá! 🤖 Seu bot está online pelo Render com webhook!")
+
+async def echo(update: Update, context):
+    await update.message.reply_text(f"Você disse: {update.message.text}")
+
+application.add_handler(CommandHandler("start", start))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+
+# --- Webhook endpoint ---
+@app.route(f"/{TOKEN}", methods=["POST"])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), application.bot)
+    asyncio.run(application.process_update(update))
+    return "ok", 200
+
+# --- Página inicial ---
 @app.route("/", methods=["GET"])
 def home():
-    return "Bot de Finanças ativo! 🚀"
-
-@app.route("/whatsapp", methods=["POST"])
-def whatsapp_webhook():
-    msg = request.form.get("Body")
-    resposta = handle_message(msg)
-    return f"<Response><Message>{resposta}</Message></Response>"
+    return "Bot do Telegram rodando via Render!", 200
 
 if __name__ == "__main__":
-    # Inicia o Telegram em outra thread
-    t = threading.Thread(target=iniciar_bot)
-    t.start()
-
-    # Roda o Flask
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
