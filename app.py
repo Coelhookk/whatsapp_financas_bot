@@ -4,8 +4,8 @@ from core.handlers import handle_message
 
 app = Flask(__name__)
 
-@app.before_first_request
-def setup():
+# 🔹 Inicializa o banco logo no início, compatível com Flask 3
+with app.app_context():
     init_db()
 
 @app.route("/", methods=["GET"])
