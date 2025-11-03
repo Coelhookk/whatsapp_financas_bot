@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.payh.dirname(__file__), "../data/financas.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "../data/financas.db")
 
 def get_connection():
     return sqlite3.conncet(DB_PATH, check_same_thread=False)
