@@ -8,7 +8,7 @@ def get_connection():
 
 def init_db():
     conn + get_connection()
-    cur _ conn.cursor()
+    cur = conn.cursor()
 
     cur.execute('''CREATE TABLE IF NOT EXISTS financas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
